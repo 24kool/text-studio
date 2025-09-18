@@ -1,0 +1,54 @@
+@baseUrl = http://127.0.0.1:8000
+
+### Check root endpoint
+GET {{baseUrl}}/
+Accept: application/json
+
+
+### Add item (POST)
+POST {{baseUrl}}/items
+Content-Type: application/json
+
+{"item": "Apple"}
+
+
+### Add another item
+POST {{baseUrl}}/items
+Content-Type: application/json
+
+{"item": "Banana"}
+
+
+### Check item list (GET) - default (limit=10)
+GET {{baseUrl}}/items
+Accept: application/json
+
+
+### Check item list (GET) - limit=5
+GET {{baseUrl}}/items?limit=5
+Accept: application/json
+
+
+### Check item list (GET) - limit=1
+GET {{baseUrl}}/items?limit=1
+Accept: application/json
+
+
+### Check item list (GET) - limit=0 (empty list)
+GET {{baseUrl}}/items?limit=0
+Accept: application/json
+
+
+### Get specific item (index = 0)
+GET {{baseUrl}}/items/0
+Accept: application/json
+
+
+### Get specific item (index = 1)
+GET {{baseUrl}}/items/1
+Accept: application/json
+
+
+### Get specific item (index = 2)
+GET {{baseUrl}}/items/2
+Accept: application/json
