@@ -1,54 +1,121 @@
 @baseUrl = http://127.0.0.1:8000
 
-### Check root endpoint
+### Health Check
+GET {{baseUrl}}/api/v1/health
+
+### Get Available Providers
+GET {{baseUrl}}/api/v1/providers
+
+### Test Root Endpoint
 GET {{baseUrl}}/
-Accept: application/json
 
-
-### Add item (POST)
-POST {{baseUrl}}/items
+### Transform Text - Tone Change
+POST {{baseUrl}}/api/v1/transform
 Content-Type: application/json
 
-{"item": "Apple"}
+{
+    "text": "Hello. Thank you for attending today's meeting.",
+    "transformation_type": "tone",
+    "tone": "casual",
+    "ai_provider": "gemini"
+}
 
-
-### Add another item
-POST {{baseUrl}}/items
+### Transform Text - Format Change
+POST {{baseUrl}}/api/v1/transform
 Content-Type: application/json
 
-{"item": "Banana"}
+{
+    "text": "The project has been completed successfully. Thank you for all team members' hard work.",
+    "transformation_type": "format",
+    "format": "email",
+    "ai_provider": "gemini"
+}
 
+### Transform Text - Language Translation
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
 
-### Check item list (GET) - default (limit=10)
-GET {{baseUrl}}/items
-Accept: application/json
+{
+    "text": "Hello, how are you today?",
+    "transformation_type": "language",
+    "target_language": "ko",
+    "ai_provider": "gemini"
+}
 
+### Transform Text - Length Adjustment
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
 
-### Check item list (GET) - limit=5
-GET {{baseUrl}}/items?limit=5
-Accept: application/json
+{
+    "text": "Artificial intelligence is a very important technology in modern society.",
+    "transformation_type": "length",
+    "length": "expand",
+    "ai_provider": "gemini"
+}
 
+### Transform Text - Custom Instruction
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
 
-### Check item list (GET) - limit=1
-GET {{baseUrl}}/items?limit=1
-Accept: application/json
+{
+    "text": "The weather is nice today.",
+    "transformation_type": "tone",
+    "tone": "professional",
+    "custom_instruction": "Please write in business email format",
+    "ai_provider": "gemini"
+}
 
+### Upload and Transform - Text File
+POST {{baseUrl}}/api/v1/upload-and-transform
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-### Check item list (GET) - limit=0 (empty list)
-GET {{baseUrl}}/items?limit=0
-Accept: application/json
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
 
+Hello. This is a test file.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="transformation_type"
 
-### Get specific item (index = 0)
-GET {{baseUrl}}/items/0
-Accept: application/json
+tone
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="tone"
 
+formal
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="ai_provider"
 
-### Get specific item (index = 1)
-GET {{baseUrl}}/items/1
-Accept: application/json
+gemini
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+### Extract Text Only
+POST {{baseUrl}}/api/v1/extract-text
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-### Get specific item (index = 2)
-GET {{baseUrl}}/items/2
-Accept: application/json
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+This is a text extraction test.
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Error Test - Invalid Transformation Type
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Test text",
+    "transformation_type": "invalid_type",
+    "ai_provider": "gemini"
+}
+
+### Error Test - Empty Text
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "",
+    "transformation_type": "tone",
+    "tone": "casual",
+    "ai_provider": "gemini"
+}
