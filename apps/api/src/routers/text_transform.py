@@ -5,7 +5,7 @@ from pathlib import Path
 
 from ..models.schemas import (
     TextTransformRequest, TextTransformResponse, FileUploadResponse, 
-    ErrorResponse, AIProvider, TransformationType, ToneOption, 
+    ErrorResponse, AIProvider, TransformationType, 
     FormatOption, LengthOption, LanguageOption
 )
 from ..services.ai_service import ai_service
@@ -24,7 +24,8 @@ async def transform_text(request: TextTransformRequest):
             text=request.text,
             transformation_type=request.transformation_type,
             provider=request.ai_provider,
-            tone=request.tone,
+            tone_x=request.tone_x,
+            tone_y=request.tone_y,
             format=request.format,
             length=request.length,
             target_language=request.target_language,

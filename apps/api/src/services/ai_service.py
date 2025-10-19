@@ -1,6 +1,6 @@
 from typing import Optional, Dict
 from ..models.schemas import (
-    AIProvider, TransformationType, ToneOption, FormatOption, 
+    AIProvider, TransformationType, FormatOption, 
     LengthOption, LanguageOption
 )
 from .providers.base import BaseAIProvider
@@ -48,7 +48,8 @@ class AIService:
         text: str,
         transformation_type: TransformationType,
         provider: AIProvider = None,
-        tone: Optional[ToneOption] = None,
+        tone_x: Optional[int] = 0,
+        tone_y: Optional[int] = 0,
         format: Optional[FormatOption] = None,
         length: Optional[LengthOption] = None,
         target_language: Optional[LanguageOption] = None,
@@ -68,7 +69,8 @@ class AIService:
         return await ai_provider.transform_text(
             text=text,
             transformation_type=transformation_type,
-            tone=tone,
+            tone_x=tone_x,
+            tone_y=tone_y,
             format=format,
             length=length,
             target_language=target_language,

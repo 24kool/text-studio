@@ -16,7 +16,8 @@ class GeminiProvider(BaseAIProvider):
         self,
         text: str,
         transformation_type: TransformationType,
-        tone: Optional[ToneOption] = None,
+        tone_x: Optional[int] = 0,
+        tone_y: Optional[int] = 0,
         format: Optional[FormatOption] = None,
         length: Optional[LengthOption] = None,
         target_language: Optional[LanguageOption] = None,
@@ -25,7 +26,7 @@ class GeminiProvider(BaseAIProvider):
         """Transform text using Gemini API."""
         
         prompt = self._build_prompt(
-            text, transformation_type, tone, format, length, target_language, custom_instruction
+            text, transformation_type, tone_x, tone_y, format, length, target_language, custom_instruction
         )
         
         try:
@@ -42,7 +43,8 @@ class GeminiProvider(BaseAIProvider):
         self,
         text: str,
         transformation_type: TransformationType,
-        tone: Optional[ToneOption] = None,
+        tone_x: Optional[int] = 0,
+        tone_y: Optional[int] = 0,
         format: Optional[FormatOption] = None,
         length: Optional[LengthOption] = None,
         target_language: Optional[LanguageOption] = None,
@@ -51,7 +53,7 @@ class GeminiProvider(BaseAIProvider):
         """Build Gemini-specific prompt."""
         
         base_prompt = super()._build_prompt(
-            text, transformation_type, tone, format, length, target_language, custom_instruction
+            text, transformation_type, tone_x, tone_y, format, length, target_language, custom_instruction
         )
         
         # Add Gemini-specific instructions

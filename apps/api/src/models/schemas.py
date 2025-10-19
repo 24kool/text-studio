@@ -47,7 +47,8 @@ class AIProvider(str, Enum):
 class TextTransformRequest(BaseModel):
     text: str = Field(..., description="Text to transform")
     transformation_type: TransformationType = Field(..., description="Type of transformation")
-    tone: Optional[ToneOption] = Field(None, description="Tone transformation option")
+    tone_x: Optional[int] = Field(0, ge=-100, le=100, description="Tone X-axis: formal(+) to casual(-), range: -100 to 100")
+    tone_y: Optional[int] = Field(0, ge=-100, le=100, description="Tone Y-axis: concise(+) to elaborate(-), range: -100 to 100")
     format: Optional[FormatOption] = Field(None, description="Format transformation option")
     length: Optional[LengthOption] = Field(None, description="Length transformation option")
     target_language: Optional[LanguageOption] = Field(None, description="Target language")

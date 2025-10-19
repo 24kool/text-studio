@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-from ...models.schemas import TransformationType, ToneOption, FormatOption, LengthOption, LanguageOption
+from ...models.schemas import TransformationType, FormatOption, LengthOption, LanguageOption
 
 
 class BaseAIProvider(ABC):
@@ -14,7 +14,8 @@ class BaseAIProvider(ABC):
         self,
         text: str,
         transformation_type: TransformationType,
-        tone: Optional[ToneOption] = None,
+        tone_x: Optional[int] = 0,
+        tone_y: Optional[int] = 0,
         format: Optional[FormatOption] = None,
         length: Optional[LengthOption] = None,
         target_language: Optional[LanguageOption] = None,
@@ -32,7 +33,8 @@ class BaseAIProvider(ABC):
         self,
         text: str,
         transformation_type: TransformationType,
-        tone: Optional[ToneOption] = None,
+        tone_x: Optional[int] = 0,
+        tone_y: Optional[int] = 0,
         format: Optional[FormatOption] = None,
         length: Optional[LengthOption] = None,
         target_language: Optional[LanguageOption] = None,
@@ -43,15 +45,31 @@ class BaseAIProvider(ABC):
         prompt_parts = []
         
         # Basic instructions
-        if transformation_type == TransformationType.TONE and tone:
-            tone_instructions = {
-                ToneOption.FORMAL: "Please transform the following text to a formal and polite tone.",
-                ToneOption.CASUAL: "Please transform the following text to a friendly and casual tone.",
-                ToneOption.FRIENDLY: "Please transform the following text to a friendly and warm tone.",
-                ToneOption.PROFESSIONAL: "Please transform the following text to a professional and business-like tone.",
-                ToneOption.POLITE: "Please transform the following text to a polite and courteous tone."
-            }
-            prompt_parts.append(tone_instructions.get(tone, "Please change the tone."))
+        if transformation_type == TransformationType.TONE:
+            tone_instructions = []
+            
+            # Handle X-axis (formal/casual)
+            if tone_x > 0:
+                intensity = "slightly" if tone_x <= 30 else "moderately" if tone_x <= 60 else "very"
+                tone_instructions.append(f"Make the text {intensity} formal and professional")
+            elif tone_x < 0:
+                intensity = "slightly" if abs(tone_x) <= 30 else "moderately" if abs(tone_x) <= 60 else "very"
+                tone_instructions.append(f"Make the text {intensity} casual and conversational")
+            
+            # Handle Y-axis (concise/elaborate)
+            if tone_y > 0:
+                intensity = "slightly" if tone_y <= 30 else "moderately" if tone_y <= 60 else "very"
+                tone_instructions.append(f"Make the text {intensity} concise and brief")
+            elif tone_y < 0:
+                intensity = "slightly" if abs(tone_y) <= 30 else "moderately" if abs(tone_y) <= 60 else "very"
+                tone_instructions.append(f"Make the text {intensity} elaborate and detailed")
+            
+            if tone_instructions:
+                prompt_parts.append("Please transform the following text with these tone adjustments:")
+                prompt_parts.append("- " + "\n- ".join(tone_instructions))
+            else:
+                # (0, 0) - neutral, no tone transformation
+                prompt_parts.append("Please keep the original tone of the text.")
         
         elif transformation_type == TransformationType.FORMAT and format:
             format_instructions = {
