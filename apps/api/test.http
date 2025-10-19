@@ -9,14 +9,63 @@ GET {{baseUrl}}/api/v1/providers
 ### Test Root Endpoint
 GET {{baseUrl}}/
 
-### Transform Text - Tone Change
+### Transform Text - Tone Change (Casual)
 POST {{baseUrl}}/api/v1/transform
 Content-Type: application/json
 
 {
     "text": "Hello. Thank you for attending today's meeting.",
     "transformation_type": "tone",
-    "tone": "casual",
+    "tone_x": -50,
+    "tone_y": 0,
+    "ai_provider": "gemini"
+}
+
+### Transform Text - 2D Tone Control (Formal + Concise)
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Hello. Thank you for attending today's meeting.",
+    "transformation_type": "tone",
+    "tone_x": 30,
+    "tone_y": 60,
+    "ai_provider": "gemini"
+}
+
+### Transform Text - 2D Tone Control (Casual + Elaborate)
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Hello. Thank you for attending today's meeting.",
+    "transformation_type": "tone",
+    "tone_x": -30,
+    "tone_y": -60,
+    "ai_provider": "gemini"
+}
+
+### Transform Text - 2D Tone Control (Very Formal + Very Concise)
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Hello. Thank you for attending today's meeting.",
+    "transformation_type": "tone",
+    "tone_x": 80,
+    "tone_y": 80,
+    "ai_provider": "gemini"
+}
+
+### Transform Text - 2D Tone Control (Neutral - No Change)
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Hello. Thank you for attending today's meeting.",
+    "transformation_type": "tone",
+    "tone_x": 0,
+    "tone_y": 0,
     "ai_provider": "gemini"
 }
 
@@ -53,51 +102,56 @@ Content-Type: application/json
     "ai_provider": "gemini"
 }
 
-### Transform Text - Custom Instruction
+### Transform Text - Custom Instruction with 2D Tone
 POST {{baseUrl}}/api/v1/transform
 Content-Type: application/json
 
 {
     "text": "The weather is nice today.",
     "transformation_type": "tone",
-    "tone": "professional",
+    "tone_x": 60,
+    "tone_y": 30,
     "custom_instruction": "Please write in business email format",
     "ai_provider": "gemini"
 }
 
-### Upload and Transform - Text File
-POST {{baseUrl}}/api/v1/upload-and-transform
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+### Upload and Transform - Text File (DISABLED - OCR feature not yet implemented)
+# POST {{baseUrl}}/api/v1/upload-and-transform
+# Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+#
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="file"; filename="test.txt"
+# Content-Type: text/plain
+#
+# Hello. This is a test file.
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="transformation_type"
+#
+# tone
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="tone_x"
+#
+# 60
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="tone_y"
+#
+# 0
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="ai_provider"
+#
+# gemini
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="test.txt"
-Content-Type: text/plain
-
-Hello. This is a test file.
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="transformation_type"
-
-tone
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="tone"
-
-formal
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="ai_provider"
-
-gemini
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-### Extract Text Only
-POST {{baseUrl}}/api/v1/extract-text
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="test.txt"
-Content-Type: text/plain
-
-This is a text extraction test.
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
+### Extract Text Only (DISABLED - OCR feature not yet implemented)
+# POST {{baseUrl}}/api/v1/extract-text
+# Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+#
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="file"; filename="test.txt"
+# Content-Type: text/plain
+#
+# This is a text extraction test.
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Error Test - Invalid Transformation Type
 POST {{baseUrl}}/api/v1/transform
@@ -116,6 +170,19 @@ Content-Type: application/json
 {
     "text": "",
     "transformation_type": "tone",
-    "tone": "casual",
+    "tone_x": -50,
+    "tone_y": 0,
+    "ai_provider": "gemini"
+}
+
+### Error Test - Invalid Tone Coordinates (Out of Range)
+POST {{baseUrl}}/api/v1/transform
+Content-Type: application/json
+
+{
+    "text": "Test text",
+    "transformation_type": "tone",
+    "tone_x": 150,
+    "tone_y": -200,
     "ai_provider": "gemini"
 }
